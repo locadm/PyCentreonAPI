@@ -29,7 +29,11 @@ def authenticate(url: str, username: str, password: str) -> str:
     auth = {"username": username, "password": password}
     response = requests.post("{}/centreon/api/index.php?action=authenticate".format(url), data=auth)
 
-    token = response.json()["authToken"]
+    try:
+        token = response.json()["authToken"]
+    except TypeError:
+        raise APITokenException("Authentication failed!")
+
     global v1_api_token, v1_server_url
     v1_api_token = token
     v1_server_url = url
