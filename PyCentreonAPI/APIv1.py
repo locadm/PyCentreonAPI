@@ -174,6 +174,42 @@ def rename_service(host: str, old_name: str, new_name: str):
                          data=json.dumps(payload), headers=c_header).json()
 
 
+def disable_service(host: str, service: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "setparam",
+        "object": "SERVICE",
+        "values": "{host};{name};activate;0".format(host=host, name=name)
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
+
+
+def activate_service(host: str, service: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "setparam",
+        "object": "SERVICE",
+        "values": "{host};{name};activate;1".format(host=host, name=name)
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
+
+
 def set_host_param(host: str, parameter: str, value: str):
     global v1_api_token, v1_server_url
     check_token()
