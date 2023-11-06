@@ -185,7 +185,7 @@ def disable_service(host: str, service: str):
     payload = {
         "action": "setparam",
         "object": "SERVICE",
-        "values": "{host};{name};activate;0".format(host=host, name=name)
+        "values": "{host};{service};activate;0".format(host=host, service=service)
     }
 
     return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
@@ -203,7 +203,7 @@ def activate_service(host: str, service: str):
     payload = {
         "action": "setparam",
         "object": "SERVICE",
-        "values": "{host};{name};activate;1".format(host=host, name=name)
+        "values": "{host};{service};activate;1".format(host=host, service=service)
     }
 
     return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
