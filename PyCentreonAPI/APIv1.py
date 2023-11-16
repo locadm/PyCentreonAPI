@@ -243,3 +243,20 @@ def get_all_contacts():
 
     return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
                          data=json.dumps(payload), headers=c_header).json()
+
+def add_instance(name: str, address: str, ssh_port: int, gorgone_com_type: int, gorgone_com_port: int):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "add",
+        "object": "INSTANCE",
+        "values": f"{name};{address};{ssh_port};{gorgone_com_type};{gorgone_com_port}"
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
