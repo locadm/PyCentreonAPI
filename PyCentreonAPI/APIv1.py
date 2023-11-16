@@ -260,3 +260,21 @@ def add_instance(name: str, address: str, ssh_port: int, gorgone_com_type: int, 
 
     return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
                          data=json.dumps(payload), headers=c_header).json()
+
+
+def set_instance_param(instance: str, param_name: str, param_value: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "setparam",
+        "object": "INSTANCE",
+        "values": f"{instance};{param_name};{param_value}"
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
