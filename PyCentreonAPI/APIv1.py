@@ -332,3 +332,21 @@ def set_centengine_param(engine: str, param_name: str, param_value: str):
 
     return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
                          data=json.dumps(payload), headers=c_header).json()
+
+
+def set_broker_param(broker: str, param_name: str, param_value: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "setparam",
+        "object": "CENTBROKERCFG",
+        "values": f"{broker};{param_name};{param_value}"
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
