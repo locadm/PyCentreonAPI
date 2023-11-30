@@ -298,6 +298,24 @@ def add_centengine(name: str, instance_name: str, comment: str):
                          data=json.dumps(payload), headers=c_header).json()
 
 
+def add_broker(name: str, instance_name: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "add",
+        "object": "CENTBROKERCFG",
+        "values": f"{name};{instance_name}"
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
+
+
 def set_centengine_param(engine: str, param_name: str, param_value: str):
     global v1_api_token, v1_server_url
     check_token()
