@@ -42,14 +42,21 @@ def authenticate(url: str, username: str, password: str) -> str:
 # todo: finish
 
 
-def add_host(name: str, alias: str, ip: str, poller_name:str, templates:list[str]=None, hostgroups:list[str]=None):
+def add_host(name: str, alias: str, ip: str, poller_name: str, templates: list[str] = None, hostgroups: list[str] = None):
     if templates is None:
         templates = [""]
     global v1_api_token, v1_server_url
     check_token()
 
-    templates = '**'.join(templates)
-    hostgroups = '**'.join(hostgroups)
+    if templates is not None or len(templates) > 0:
+        templates = "|".join(templates)
+    else:
+        templates = ""
+
+    if hostgroups is not None or len(hostgroups) > 0:
+        hostgroups = "|".join(hostgroups)
+    else:
+        hostgroups = ""
 
     c_header = {
         "Content-Type": "application/json",
@@ -58,8 +65,9 @@ def add_host(name: str, alias: str, ip: str, poller_name:str, templates:list[str
     payload = {
         "action": "add",
         "object": "HOST",
-        "values": f"{name},{alias},{ip},{templates},{poller_name},{hostgroups}"
+        "values": f"{name};{alias};{ip};{templates};{poller_name};{hostgroups}"
     }
+    print(payload)
 
     return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
                          data=json.dumps(payload), headers=c_header).json()
