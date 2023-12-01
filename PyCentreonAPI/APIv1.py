@@ -39,7 +39,68 @@ def authenticate(url: str, username: str, password: str) -> str:
     v1_server_url = url
     return token
 
-#todo: finish
+# todo: finish
+
+
+def add_host(name: str, alias: str, ip: str, poller_name:str, templates:list[str]=None, hostgroups:list[str]=None):
+    if templates is None:
+        templates = [""]
+    global v1_api_token, v1_server_url
+    check_token()
+
+    templates = '**'.join(templates)
+    hostgroups = '**'.join(hostgroups)
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "add",
+        "object": "HOST",
+        "values": f"{name},{alias},{ip},{templates},{poller_name},{hostgroups}"
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
+
+
+def set_host_param(host: str, parameter: str, value: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "setparam",
+        "object": "HOST",
+        "values": f"{host};{parameter};{value}"
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
+
+
+def set_host_macro(host: str, macro_name: str, macro_value: str, macro_description: str, is_password: bool = False):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "setmacro",
+        "object": "SERVICE",
+        "values": f"{host};{macro_name};{macro_value};{int(is_password)};{macro_description}"
+    }
+
+    return requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                         data=json.dumps(payload), headers=c_header).json()
+
+
 def get_hostgroup(host: str = None, service: str = None):
     global v1_api_token, v1_server_url
     check_token()
