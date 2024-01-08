@@ -76,6 +76,23 @@ def authenticate(url: str, username: str, password: str) -> str:
     return token
 
 
+def get_host(name = None):
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "show",
+        "object": "HOST",
+    }
+    if name is not None:
+        payload["values"] = name
+
+    response = requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                             data=json.dumps(payload), headers=c_header)
+    check_api_response(response)
+    return response
+
 def add_host(name: str, alias: str, ip: str, poller_name: str, templates: list[str] = None,
              hostgroups: list[str] = None):
     if templates is None:
