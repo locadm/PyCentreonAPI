@@ -186,6 +186,26 @@ def add_host_template(host: str, template: str):
     return response
 
 
+def add_host_hostgroup(host: str, hostgroup: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "addhostgroup",
+        "object": "HOST",
+        "values": f"{host};{hostgroup}"
+    }
+
+    response = requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                             data=json.dumps(payload), headers=c_header)
+    check_api_response(response)
+    return response
+
+
 def host_apply_template(host: str):
     global v1_api_token, v1_server_url
     check_token()
