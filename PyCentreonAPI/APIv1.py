@@ -76,7 +76,7 @@ def authenticate(url: str, username: str, password: str) -> str:
     return token
 
 
-def get_host(name = None):
+def get_hosts(name = None):
     c_header = {
         "Content-Type": "application/json",
         "centreon-auth-token": v1_api_token
@@ -158,6 +158,46 @@ def set_host_macro(host: str, macro_name: str, macro_value: str, macro_descripti
         "action": "setmacro",
         "object": "SERVICE",
         "values": f"{host};{macro_name};{macro_value};{int(is_password)};{macro_description}"
+    }
+
+    response = requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                             data=json.dumps(payload), headers=c_header)
+    check_api_response(response)
+    return response
+
+
+def add_host_template(host: str, template: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "addtemplate",
+        "object": "HOST",
+        "values": f"{host};{template}"
+    }
+
+    response = requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
+                             data=json.dumps(payload), headers=c_header)
+    check_api_response(response)
+    return response
+
+
+def host_apply_template(host: str):
+    global v1_api_token, v1_server_url
+    check_token()
+
+    c_header = {
+        "Content-Type": "application/json",
+        "centreon-auth-token": v1_api_token
+    }
+    payload = {
+        "action": "applytpl",
+        "object": "HOST",
+        "values": f"{host}"
     }
 
     response = requests.post("{}/centreon/api/index.php?action=action&object=centreon_clapi".format(v1_server_url),
