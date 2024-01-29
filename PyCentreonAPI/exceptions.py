@@ -32,4 +32,3 @@ class CentreonRequestException(Exception):
     def __init__(self, message="Exception raised when API error encountered"):
         self.message = message
         super().__init__(self.message)
-

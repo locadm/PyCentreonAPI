@@ -34,7 +34,8 @@ def authenticate(url: str, username: str, password: str) -> str:
     return token
 
 
-def get_hosts(search: str = None, limit: int = None, show_service: bool = None, page: int = None, verify_ssl: bool = True):
+def get_hosts(search: str = None, limit: int = None, show_service: bool = None, page: int = None,
+              verify_ssl: bool = True):
     check_token()
 
     params = {}
@@ -45,7 +46,7 @@ def get_hosts(search: str = None, limit: int = None, show_service: bool = None, 
         params["show_service"] = str(show_service).lower()
     if page is not None and page < 1:
         if page < 1:
-            raise ValueError(S)
+            raise ValueError(PAGE_SUB1)
         params["page"] = page
 
     if search is not None:
@@ -60,7 +61,6 @@ def get_hosts(search: str = None, limit: int = None, show_service: bool = None, 
 def get_host_groups(search: str = None, limit: int = None, show_host: bool = None,
                     show_service: bool = None, page: int = None, verify_ssl: bool = True):
     check_token()
-
 
     params = {}
     if limit is not None:
