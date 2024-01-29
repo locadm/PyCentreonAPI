@@ -7,6 +7,15 @@ PAGE_SUB1 = "Page argument cannot be lower than 1!"
 
 class CentreonAPIv2:
     def __init__(self, centreon_url):
+        try:
+            status_code = requests.head(centreon_url).status_code
+            if status_code >= 400:
+                raise pcc_exceptions.CentreonConnectionException(f'Centreon server on following URL: '
+                                                                 f'"{centreon_url}" returned code {status_code}')
+        except requests.exceptions.ConnectionError:
+            raise pcc_exceptions.CentreonConnectionException(f'Failed to request Centreon server on following URL: '
+                                                             f'"{centreon_url}"')
+
         self.__v2_server_url = centreon_url
         self.__v2_api_token = None
 
@@ -20,9 +29,17 @@ class CentreonAPIv2:
 
     def authenticate(self, username: str, password: str) -> str:
         auth = {"security": {"credentials": {"login": username, "password": password}}}
-        response = requests.post("{}/centreon/api/beta/login".format(self.__v2_server_url),
-                                 data=json.dumps(auth)).json()
-        token = response["security"]["token"]
+        try:
+            response = requests.post("{}/centreon/api/beta/login".format(self.__v2_server_url),
+                                    data=json.dumps(auth)).json()
+        except requests.exceptions.ConnectionError:
+            raise pcc_exceptions.CentreonConnectionException("Failed to connect to Centreon server!")
+
+        try:
+            token = response["security"]["token"]
+        except KeyError:
+            raise pcc_exceptions.APITokenException("Authentication failed!")
+
         self.__v2_api_token = token
         return token
 

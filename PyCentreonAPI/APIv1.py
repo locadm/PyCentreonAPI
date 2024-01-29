@@ -6,8 +6,18 @@ from . import pcc_enums
 
 class CentreonAPIv1:
     def __init__(self, centreon_url):
+        try:
+            status_code = requests.head(centreon_url).status_code
+            if status_code >= 400:
+                raise pcc_exceptions.CentreonConnectionException(f'Centreon server on following URL: '
+                                                                 f'"{centreon_url}" returned code {status_code}')
+        except requests.exceptions.ConnectionError:
+            raise pcc_exceptions.CentreonConnectionException(f'Failed to request Centreon server on following URL: '
+                                                             f'"{centreon_url}"')
+
         self.__v1_server_url = centreon_url
         self.__v1_api_token = None
+
 
     def __check_token(self) -> bool:
         if self.__v1_server_url is None:
