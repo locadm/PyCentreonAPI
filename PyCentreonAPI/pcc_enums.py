@@ -82,6 +82,17 @@ class PollerParameters(Enum):
     CENTREONBROKER_MODULE_PATH = "centreonbroker_module_path"
 
 
+class ResourceCFGParameters(Enum):
+    def __str__(self):
+        return self.value
+
+    NAME = "name"
+    MACRO_VALUE = "value"
+    ACTIVATE = "activate"
+    COMMENT = "comment"
+    INSTANCE = "instance"
+
+
 class ServiceParameters(Enum):
     def __str__(self):
         return self.value

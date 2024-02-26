@@ -31,7 +31,7 @@ class CentreonAPIv2:
         auth = {"security": {"credentials": {"login": username, "password": password}}}
         try:
             response = requests.post("{}/centreon/api/beta/login".format(self.__v2_server_url),
-                                    data=json.dumps(auth)).json()
+                                     data=json.dumps(auth)).json()
         except requests.exceptions.ConnectionError:
             raise pcc_exceptions.CentreonConnectionException("Failed to connect to Centreon server!")
 
@@ -43,7 +43,10 @@ class CentreonAPIv2:
         self.__v2_api_token = token
         return token
 
-    def get_hosts(self, search: str = None, limit: int = None, show_service: bool = None, page: int = None,
+    def get_token(self) -> str:
+        return self.__v2_api_token
+
+    def get_hosts(self, search, limit: int = None, show_service: bool = None, page: int = None,
                   verify_ssl: bool = True):
         self.__check_token()
 
@@ -58,14 +61,13 @@ class CentreonAPIv2:
                 raise ValueError(PAGE_SUB1)
             params["page"] = page
 
-        if search is not None:
-            params["search"] = search
+        params["search"] = search
 
         result = requests.get(f"{self.__v2_server_url}/centreon/api/beta/monitoring/hosts",
                               headers={"X-AUTH-TOKEN": self.__v2_api_token}, verify=verify_ssl, params=params)
         return result.json()
 
-    def get_host_groups(self, search: str = None, limit: int = None, show_host: bool = None,
+    def get_host_groups(self, search, limit: int = None, show_host: bool = None,
                         show_service: bool = None, page: int = None, verify_ssl: bool = True):
         self.__check_token()
 
@@ -81,14 +83,13 @@ class CentreonAPIv2:
                 raise ValueError(PAGE_SUB1)
             params["page"] = page
 
-        if search is not None:
-            params["search"] = search
+        params["search"] = search
 
         result = requests.get(f"{self.__v2_server_url}/centreon/api/beta/monitoring/hostgroups",
                               headers={"X-AUTH-TOKEN": self.__v2_api_token}, verify=verify_ssl, params=params)
         return result.json()
 
-    def get_pollers(self, search: str = None, limit: int = None, page: int = None, verify_ssl: bool = True):
+    def get_pollers(self, search, limit: int = None, page: int = None, verify_ssl: bool = True):
         self.__check_token()
 
         params = {}
@@ -99,8 +100,7 @@ class CentreonAPIv2:
                 raise ValueError(PAGE_SUB1)
             params["page"] = page
 
-        if search is not None:
-            params["search"] = search
+        params["search"] = search
 
         result = requests.get(f"{self.__v2_server_url}/centreon/api/beta/monitoring/servers",
                               headers={"X-AUTH-TOKEN": self.__v2_api_token}, verify=verify_ssl, params=params)

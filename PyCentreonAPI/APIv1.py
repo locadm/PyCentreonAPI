@@ -5,9 +5,10 @@ from . import pcc_enums
 
 
 class CentreonAPIv1:
-    def __init__(self, centreon_url):
+    def __init__(self, centreon_url, custom_endpoint: str = None):
+
         try:
-            status_code = requests.head(centreon_url).status_code
+            status_code = requests.head(f"{centreon_url}").status_code
             if status_code >= 400:
                 raise pcc_exceptions.CentreonConnectionException(f'Centreon server on following URL: '
                                                                  f'"{centreon_url}" returned code {status_code}')
@@ -15,9 +16,10 @@ class CentreonAPIv1:
             raise pcc_exceptions.CentreonConnectionException(f'Failed to request Centreon server on following URL: '
                                                              f'"{centreon_url}"')
 
+        self.__endpoint = "/centreon/api/index.php?action=action&object=centreon_clapi" if custom_endpoint is None \
+            else custom_endpoint
         self.__v1_server_url = centreon_url
         self.__v1_api_token = None
-
 
     def __check_token(self) -> bool:
         if self.__v1_server_url is None:
@@ -51,15 +53,17 @@ class CentreonAPIv1:
             "Content-Type": "application/json",
             "centreon-auth-token": self.__v1_api_token
         }
-        response = requests.post(f"{self.__v1_server_url}/centreon/api/index.php?action=action&object=centreon_clapi",
+        response = requests.post(f"{self.__v1_server_url}{self.__endpoint}",
                                  data=json.dumps(payload), headers=c_header)
         self.__check_api_response(response)
         return response
 
-    def authenticate(self, username: str, password: str) -> str:
+    def authenticate(self, username: str, password: str, custom_endpoint: str = None) -> str:
         auth = {"username": username, "password": password}
+
+        endpoint = "/centreon/api/index.php?action=authenticate" if custom_endpoint is None else custom_endpoint
         try:
-            response = requests.post(f"{self.__v1_server_url}/centreon/api/index.php?action=authenticate", data=auth)
+            response = requests.post(f"{self.__v1_server_url}{endpoint}", data=auth)
         except requests.exceptions.ConnectionError:
             raise pcc_exceptions.CentreonConnectionException("Failed to connect to Centreon server!")
 
@@ -70,6 +74,9 @@ class CentreonAPIv1:
 
         self.__v1_api_token = token
         return token
+
+    def get_token(self) -> str:
+        return self.__v1_api_token
 
     def get_hosts(self, name: str = None):
         payload = self.__build_payload(obj="HOST", action="show", values=name) if name is not None \
@@ -216,8 +223,8 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
-    def add_instance(self, name: str, address: str, ssh_port: int, gorgone_com_type: pcc_enums.GorgoneCommType,
-                     gorgone_com_port: int):
+    def add_poller(self, name: str, address: str, ssh_port: int, gorgone_com_type: pcc_enums.GorgoneCommType,
+                   gorgone_com_port: int):
         self.__check_token()
 
         payload = self.__build_payload(obj="INSTANCE", action="add",
@@ -225,24 +232,24 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
-    def set_instance_param(self, instance: str, param_name: pcc_enums.PollerParameters, param_value: str):
+    def set_poller_param(self, poller: str, param_name: pcc_enums.PollerParameters, param_value: str):
         self.__check_token()
 
-        payload = self.__build_payload(obj="INSTANCE", action="setparam", values=f"{instance};{param_name};{param_value}")
+        payload = self.__build_payload(obj="INSTANCE", action="setparam", values=f"{poller};{param_name};{param_value}")
         response = self.__send_request(payload=payload)
         return response
 
-    def add_centengine(self, name: str, instance_name: str, comment: str):
+    def add_centengine(self, name: str, poller_name: str, comment: str):
         self.__check_token()
 
-        payload = self.__build_payload(obj="ENGINECFG", action="add", values=f"{name};{instance_name};{comment}")
+        payload = self.__build_payload(obj="ENGINECFG", action="add", values=f"{name};{poller_name};{comment}")
         response = self.__send_request(payload=payload)
         return response
 
-    def add_broker(self, name: str, instance_name: str):
+    def add_broker(self, name: str, poller: str):
         self.__check_token()
 
-        payload = self.__build_payload(obj="CENTBROKERCFG", action="add", values=f"{name};{instance_name}")
+        payload = self.__build_payload(obj="CENTBROKERCFG", action="add", values=f"{name};{poller}")
         response = self.__send_request(payload=payload)
         return response
 
@@ -258,5 +265,20 @@ class CentreonAPIv1:
 
         payload = self.__build_payload(obj="CENTBROKERCFG", action="setparam",
                                        values=f"{broker};{param_name};{param_value}")
+        response = self.__send_request(payload=payload)
+        return response
+
+    def get_resourcecfg(self):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="RESOURCECFG", action="show")
+        response = self.__send_request(payload=payload)
+        return response
+
+    def set_resourcecfg_param(self, id: int, param_name: pcc_enums.ResourceCFGParameters, param_value: str):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="RESOURCECFG", action="show",
+                                       values=f"{id};{param_name};{param_value}")
         response = self.__send_request(payload=payload)
         return response
