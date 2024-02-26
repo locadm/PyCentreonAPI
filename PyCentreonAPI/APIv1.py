@@ -253,14 +253,15 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
-    def set_centengine_param(self, engine: str, param_name: str, param_value: str):
+    def set_centengine_param(self, engine: str, param_name: pcc_enums.CentengineParameters, param_value: str):
         self.__check_token()
 
-        payload = self.__build_payload(obj="ENGINECFG", action="setparam", values=f"{engine};{param_name};{param_value}")
+        payload = self.__build_payload(obj="ENGINECFG", action="setparam",
+                                       values=f"{engine};{param_name};{param_value}")
         response = self.__send_request(payload=payload)
         return response
 
-    def set_broker_param(self, broker: str, param_name: str, param_value: str):
+    def set_broker_param(self, broker: str, param_name: pcc_enums.BrokerParameters, param_value: str):
         self.__check_token()
 
         payload = self.__build_payload(obj="CENTBROKERCFG", action="setparam",
@@ -275,10 +276,10 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
-    def set_resourcecfg_param(self, id: int, param_name: pcc_enums.ResourceCFGParameters, param_value: str):
+    def set_resourcecfg_param(self, resourcecfg_id: int, param_name: pcc_enums.ResourceCFGParameters, param_value: str):
         self.__check_token()
 
         payload = self.__build_payload(obj="RESOURCECFG", action="show",
-                                       values=f"{id};{param_name};{param_value}")
+                                       values=f"{resourcecfg_id};{param_name};{param_value}")
         response = self.__send_request(payload=payload)
         return response

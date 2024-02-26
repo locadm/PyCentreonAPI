@@ -1,10 +1,12 @@
 from enum import Enum
 
 
-class HostParameters(Enum):
+class PrintableEnum(Enum):
     def __str__(self):
         return self.value
 
+
+class HostParameters(PrintableEnum):
     GEO_COORDS = "geo_coords"
     COORDS_2D = "2d_coords"
     COORDS_3D = "3d_coords"
@@ -54,18 +56,12 @@ class HostParameters(Enum):
     COMMENT = "comment"
 
 
-class GorgoneCommType(Enum):
-    def __str__(self):
-        return self.value
-
+class GorgoneCommType(PrintableEnum):
     ZMQ = "1"
     SSH = "2"
 
 
-class PollerParameters(Enum):
-    def __str__(self):
-        return self.value
-
+class PollerParameters(PrintableEnum):
     NAME = "name"
     LOCALHOST = "localhost"
     NS_IP_ADDRESS = "ns_ip_address"
@@ -82,10 +78,7 @@ class PollerParameters(Enum):
     CENTREONBROKER_MODULE_PATH = "centreonbroker_module_path"
 
 
-class ResourceCFGParameters(Enum):
-    def __str__(self):
-        return self.value
-
+class ResourceCFGParameters(PrintableEnum):
     NAME = "name"
     MACRO_VALUE = "value"
     ACTIVATE = "activate"
@@ -93,10 +86,7 @@ class ResourceCFGParameters(Enum):
     INSTANCE = "instance"
 
 
-class ServiceParameters(Enum):
-    def __str__(self):
-        return self.value
-
+class ServiceParameters(PrintableEnum):
     ACTIVATE = "activate"
     DESCRIPTION = "description"
     TEMPLATE = "template"
@@ -135,3 +125,32 @@ class ServiceParameters(Enum):
     SERVICE_NOTIFICATION_OPTIONS = "service_notification_options"
 
 
+class BrokerParameters(PrintableEnum):
+    class DaemonSettingEnum(PrintableEnum):
+        TRUE = "1"
+        FALSE = "0"
+
+    FILENAME = "filename"
+    NAME = "name"
+    INSTANCE = "instance"
+    EVENT_QUEUE_MAX_SIZE = "event_queue_max_size"
+    EVENT_QUEUES_TOTAL_SIZE = "event_queues_total_size"
+    CACHE_DIRECTORY = "cache_directory"
+    DAEMON = "daemon"
+    POOL_SIZE = "pool_size"
+    STATS_ACTIVATE = "stats_activate"
+    COMMAND_FILE = "command_file"
+    LOG_DIRECTORY = "log_directory"
+    LOG_FILENAME = "log_filename"
+
+
+# TODO: ALL CENTENGINE PARAMETER SUPPORT
+class CentengineParameters(PrintableEnum):
+    class NagiosActivateSettingEnum(PrintableEnum):
+        TRUE = "1"
+        FALSE = "0"
+
+    NAGIOS_NAME = "nagios_name"
+    INSTANCE = "instance"
+    BROKER_MODULE = "broker_module"
+    NAGIOS_ACTIVATE = "nagios_activate"
