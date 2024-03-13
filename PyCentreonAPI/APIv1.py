@@ -79,9 +79,18 @@ class CentreonAPIv1:
         return self.__v1_api_token
 
     def get_hosts(self, name: str = None):
+        self.__check_token()
+
         payload = self.__build_payload(obj="HOST", action="show", values=name) if name is not None \
             else self.__build_payload(obj="HOST", action="show")
 
+        response = self.__send_request(payload=payload)
+        return response
+
+    def remove_host(self, name: str = None):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="HOST", action="DEL", values=name)
         response = self.__send_request(payload=payload)
         return response
 
