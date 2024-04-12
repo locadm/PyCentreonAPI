@@ -86,6 +86,64 @@ class ResourceCFGParameters(PrintableEnum):
     INSTANCE = "instance"
 
 
+class ContactParameters(PrintableEnum):
+    NAME = "name"
+    ALIAS = "alias"
+    COMMENT = "comment"
+    EMAIL = "email"
+    PASSWORD = "password"
+
+    class AccessSettingEnum(PrintableEnum):
+        TRUE = "1"
+        FALSE = "0"
+    ACCESS = "access"
+
+
+    LANGUAGE = "language"
+
+    class AdminSettingEnum(PrintableEnum):
+        TRUE = "1"
+        FALSE = "0"
+    ADMIN = "admin"
+
+    class AuthTypeSettingEnum(PrintableEnum):
+        LDAP = "ldap"
+        LOCAL = "local"
+    AUTHTYPE = "authtype"
+
+    HOSTNOTIFCMD = "hostnotifcmd"
+    SVCNOTIFCMD = "svcnotifcmd"
+    HOSTNOTIFPERIOD = "hostnotifperiod"
+    SVCNOTIFPERIOD = "svcnotifperiod"
+    HOSTNOTIFOPT = "hostnotifopt"
+    SERVICENOTIFOPT = "servicenotifopt"
+    ADDRESS_1 = "address1"
+    ADDRESS_2 = "address2"
+    ADDRESS_3 = "address3"
+    ADDRESS_4 = "address4"
+    ADDRESS_5 = "address5"
+    ADDRESS_6 = "address6"
+    LDAP_DN = "ldap_dn"
+
+    class EnableNotificationsSettingEnum(PrintableEnum):
+        TRUE = "1"
+        FALSE = "0"
+    ENABLE_NOTIFICATIONS = "enable_notifications"
+    AUTOLOGIN_KEY = "autologin_key"
+    TEMPLATE = "template"
+    TIMEZONE = "timezone"
+
+    class ReachApiSettingEnum(PrintableEnum):
+        TRUE = "1"
+        FALSE = "0"
+    REACH_API = "reach_api"
+
+    class ReachApiRtSettingEnum(PrintableEnum):
+        TRUE = "1"
+        FALSE = "0"
+    REACH_API_RT = "reach_api_rt"
+
+
 class ServiceParameters(PrintableEnum):
     ACTIVATE = "activate"
     DESCRIPTION = "description"

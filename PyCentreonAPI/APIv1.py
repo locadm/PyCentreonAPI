@@ -239,6 +239,13 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
+    def set_contact_param(self, contact: str, param_name: pcc_enums.ContactParameters, param_value: str):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="CONTACT", action="setparam", values=f"{contact};{param_name};{param_value}")
+        response = self.__send_request(payload=payload)
+        return response
+
     def add_poller(self, name: str, address: str, ssh_port: int, gorgone_com_type: pcc_enums.GorgoneCommType,
                    gorgone_com_port: int):
         self.__check_token()
