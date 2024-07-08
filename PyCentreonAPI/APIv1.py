@@ -78,6 +78,10 @@ class CentreonAPIv1:
     def get_token(self) -> str:
         return self.__v1_api_token
 
+    # ==================================
+    # HOSTS
+    # ==================================
+
     def get_hosts(self, name: str = None):
         self.__check_token()
 
@@ -152,10 +156,21 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
+    # ==================================
+    # HOST GROUPS
+    # ==================================
+
     def get_hostgroups(self):
         self.__check_token()
 
         payload = self.__build_payload(obj="HG", action="show")
+        response = self.__send_request(payload=payload)
+        return response
+
+    def set_hostgroup_parameter(self, host_group: str, parameter: pcc_enums.HostGroupParameters, value: str):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="HG", action="setparam", values=f"{host_group};{parameter};{value}")
         response = self.__send_request(payload=payload)
         return response
 
@@ -165,6 +180,10 @@ class CentreonAPIv1:
         payload = self.__build_payload(obj="HG", action="getmember", values=f"{host_group}")
         response = self.__send_request(payload=payload)
         return response
+
+    # ==================================
+    # SERVICES
+    # ==================================
 
     def get_services(self, host: str = None, service: str = None):
         self.__check_token()
@@ -232,6 +251,21 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
+    # ==================================
+    # SERVICE GROUPS
+    # ==================================
+
+    def set_servicegroup_parameter(self, service_group: str, parameter: pcc_enums.ServiceGroupParameters, value: str):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="SG", action="setparam", values=f"{service_group};{parameter};{value}")
+        response = self.__send_request(payload=payload)
+        return response
+
+    # ==================================
+    # CONTACTS
+    # ==================================
+
     def get_all_contacts(self):
         self.__check_token()
 
@@ -245,6 +279,21 @@ class CentreonAPIv1:
         payload = self.__build_payload(obj="CONTACT", action="setparam", values=f"{contact};{param_name};{param_value}")
         response = self.__send_request(payload=payload)
         return response
+
+    # ==================================
+    # CONTACT GROUPS
+    # ==================================
+
+    def set_contactgroup_parameter(self, contact_group: str, parameter: pcc_enums.ServiceGroupParameters, value: str):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="CG", action="setparam", values=f"{contact_group};{parameter};{value}")
+        response = self.__send_request(payload=payload)
+        return response
+
+    # ==================================
+    # INSTANCES
+    # ==================================
 
     def add_poller(self, name: str, address: str, ssh_port: int, gorgone_com_type: pcc_enums.GorgoneCommType,
                    gorgone_com_port: int):
@@ -262,17 +311,14 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
+    # ==================================
+    # ENGINE CONFIGURATIONS
+    # ==================================
+
     def add_centengine(self, name: str, poller_name: str, comment: str):
         self.__check_token()
 
         payload = self.__build_payload(obj="ENGINECFG", action="add", values=f"{name};{poller_name};{comment}")
-        response = self.__send_request(payload=payload)
-        return response
-
-    def add_broker(self, name: str, poller: str):
-        self.__check_token()
-
-        payload = self.__build_payload(obj="CENTBROKERCFG", action="add", values=f"{name};{poller}")
         response = self.__send_request(payload=payload)
         return response
 
@@ -284,6 +330,17 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
+    # ==================================
+    # BROKER CONFIGURATIONS
+    # ==================================
+
+    def add_broker(self, name: str, poller: str):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="CENTBROKERCFG", action="add", values=f"{name};{poller}")
+        response = self.__send_request(payload=payload)
+        return response
+
     def set_broker_param(self, broker: str, param_name: pcc_enums.BrokerParameters, param_value: str):
         self.__check_token()
 
@@ -291,6 +348,10 @@ class CentreonAPIv1:
                                        values=f"{broker};{param_name};{param_value}")
         response = self.__send_request(payload=payload)
         return response
+
+    # ==================================
+    # RESOURCE CONFIGURATION
+    # ==================================
 
     def get_resourcecfg(self):
         self.__check_token()

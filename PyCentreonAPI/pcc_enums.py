@@ -56,6 +56,22 @@ class HostParameters(PrintableEnum):
     COMMENT = "comment"
 
 
+class HostGroupParameters(PrintableEnum):
+    NAME = "name"
+    ALIAS = "alias"
+    COMMENT = "comment"
+
+    class ActivateSettingEnum(PrintableEnum):
+        ENABLED = "1"
+        DISABLED = "0"
+    ACTIVATE = "activate"
+    NOTES = "notes"
+    NOTES_URL = "notes_url"
+    ACTION_URL = "action_url"
+    ICON_IMAGE = "icon_image"
+    MAP_ICON_IMAGE = "map_icon_image"
+
+
 class GorgoneCommType(PrintableEnum):
     ZMQ = "1"
     SSH = "2"
@@ -97,7 +113,6 @@ class ContactParameters(PrintableEnum):
         TRUE = "1"
         FALSE = "0"
     ACCESS = "access"
-
 
     LANGUAGE = "language"
 
@@ -144,6 +159,11 @@ class ContactParameters(PrintableEnum):
     REACH_API_RT = "reach_api_rt"
 
 
+class ContactGroupParameters(PrintableEnum):
+    NAME = "name"
+    ALIAS = "alias"
+
+
 class ServiceParameters(PrintableEnum):
     ACTIVATE = "activate"
     DESCRIPTION = "description"
@@ -181,6 +201,18 @@ class ServiceParameters(PrintableEnum):
     ICON_IMAGE_ALT = "icon_image_alt"
     COMMENT = "comment"
     SERVICE_NOTIFICATION_OPTIONS = "service_notification_options"
+
+
+class ServiceGroupParameters(PrintableEnum):
+    NAME = "name"
+    ALIAS = "alias"
+    COMMENT = "comment"
+
+    class ActivateSettingEnum(PrintableEnum):
+        ENABLED = "1"
+        DISABLED = "0"
+
+    ACTIVATE = "activate"
 
 
 class BrokerParameters(PrintableEnum):
