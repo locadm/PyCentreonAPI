@@ -254,6 +254,12 @@ class CentreonAPIv1:
     # ==================================
     # SERVICE GROUPS
     # ==================================
+    def get_servicegroups(self):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="SG", action="show")
+        response = self.__send_request(payload=payload)
+        return response
 
     def set_servicegroup_parameter(self, service_group: str, parameter: pcc_enums.ServiceGroupParameters, value: str):
         self.__check_token()
@@ -283,6 +289,13 @@ class CentreonAPIv1:
     # ==================================
     # CONTACT GROUPS
     # ==================================
+
+    def get_contactgroups(self):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="CG", action="show")
+        response = self.__send_request(payload=payload)
+        return response
 
     def set_contactgroup_parameter(self, contact_group: str, parameter: pcc_enums.ServiceGroupParameters, value: str):
         self.__check_token()
