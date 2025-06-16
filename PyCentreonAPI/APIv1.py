@@ -47,6 +47,16 @@ class CentreonAPIv1:
 
         return payload
 
+    @staticmethod
+    def __build_payload_noobject(action: str, values: str = None) -> json:
+        payload = {
+            "action": action,
+        }
+        if values is not None:
+            payload["values"] = values
+
+        return payload
+
     def __send_request(self, payload: json) -> requests.Response:
 
         c_header = {
@@ -314,6 +324,21 @@ class CentreonAPIv1:
 
         payload = self.__build_payload(obj="INSTANCE", action="add",
                                        values=f"{name};{address};{ssh_port};{gorgone_com_type};{gorgone_com_port}")
+        response = self.__send_request(payload=payload)
+        return response
+
+    def poller_apply_config(self, poller: str = None, id: int = None):
+        self.__check_token()
+
+        if poller is None and id is None:
+            raise ValueError("Either a poller name or a poller ID must be specified")
+
+        if poller is not None and id is not None:
+            raise ValueError("Only one of poller, id must be specified")
+
+        value = poller if poller is not None else id
+
+        payload = self.__build_payload_noobject(action="APPLYCFG", values=f"{value}")
         response = self.__send_request(payload=payload)
         return response
 
