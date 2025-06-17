@@ -56,7 +56,7 @@ class CentreonAPIv2:
             params["limit"] = limit
         if show_service is not None:
             params["show_service"] = str(show_service).lower()
-        if page is not None and page < 1:
+        if page is not None:
             if page < 1:
                 raise ValueError(PAGE_SUB1)
             params["page"] = page
