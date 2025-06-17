@@ -401,7 +401,7 @@ class CentreonAPIv1:
     def set_resourcecfg_param(self, resourcecfg_id: int, param_name: pcc_enums.ResourceCFGParameters, param_value: str):
         self.__check_token()
 
-        payload = self.__build_payload(obj="RESOURCECFG", action="show",
+        payload = self.__build_payload(obj="RESOURCECFG", action="setparam",
                                        values=f"{resourcecfg_id};{param_name};{param_value}")
         response = self.__send_request(payload=payload)
         return response
