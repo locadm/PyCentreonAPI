@@ -12,6 +12,10 @@ library, clone this repository and install it with `pip`:
 ```bash
 pip install .
 ```
+or through git:
+```bash
+pip install git+https://github.com/locadm/PyCentreonAPI.git
+```
 
 The only runtime dependency is `requests`.
 
