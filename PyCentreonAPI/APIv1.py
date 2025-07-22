@@ -191,6 +191,13 @@ class CentreonAPIv1:
         response = self.__send_request(payload=payload)
         return response
 
+    def add_member_hostgroup(self, host_group: str, host: str):
+        self.__check_token()
+
+        payload = self.__build_payload(obj="HG", action="addmember", values=f"{host_group};{host}")
+        response = self.__send_request(payload=payload)
+        return response
+
     # ==================================
     # SERVICES
     # ==================================
